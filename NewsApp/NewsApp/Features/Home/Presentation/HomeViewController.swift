@@ -57,6 +57,12 @@ private extension HomeViewController {
             self?.tableView.reloadData()
         }
     }
+    
+    func didSelectNews(_ selectedNews: NewsModel) {
+        let vc = DetailViewController(item: selectedNews)
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension HomeViewController: UITableViewDataSource {
@@ -77,7 +83,7 @@ extension HomeViewController: UITableViewDataSource {
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedNews = viewModel.news[indexPath.row]
-        print(selectedNews)
+        didSelectNews(selectedNews)
     }
 }
 
