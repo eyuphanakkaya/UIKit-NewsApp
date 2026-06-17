@@ -107,9 +107,8 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
-        let text = searchController.searchBar.text ?? ""
-
-        print("Searching: \(text)")
+        guard let text = searchController.searchBar.text else { return }
+        viewModel.search(text)
     }
 }
                                     
