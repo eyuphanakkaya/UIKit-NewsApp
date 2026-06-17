@@ -14,4 +14,8 @@ struct NewsModel: Equatable {
     let creator: [String]?
     let pubDate: String
     let description: String?
+    
+    var creatorText: String? {
+        creator?.joined(separator: ", ").capitalized
+    }
 }

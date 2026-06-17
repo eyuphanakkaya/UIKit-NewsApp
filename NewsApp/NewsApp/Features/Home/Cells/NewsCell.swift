@@ -40,7 +40,7 @@ final class NewsCell: UITableViewCell {
     
     func configure(with items: NewsModel) {
         configureImage(image: items.imageURL)
-        creatorLabel.text = items.creator?.first
+        creatorLabel.text = items.creatorText
         titleLabel.text = items.title
         descriptionLabel.text = items.description
         dateLabel.text = items.pubDate
