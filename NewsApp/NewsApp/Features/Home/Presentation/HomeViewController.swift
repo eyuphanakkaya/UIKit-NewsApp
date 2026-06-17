@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 final class HomeViewController: UIViewController {
+    private let searchController = UISearchController(searchResultsController: nil)
     private var tableView: UITableView!
     
     private let viewModel: HomeViewModel
@@ -24,6 +25,8 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupSearchBar()
         setupTableView()
         setupBindings()
     }
@@ -63,8 +66,21 @@ private extension HomeViewController {
         
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    
+    func setupSearchBar() {
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search News"
+        searchController.searchResultsUpdater = self
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+
+        definesPresentationContext = true
+    }
 }
 
+// MARK: - UITableView DataSource & Delegate
 extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.news.count
@@ -87,3 +103,13 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - UISearchBar Delegate
+extension HomeViewController: UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        let text = searchController.searchBar.text ?? ""
+
+        print("Searching: \(text)")
+    }
+}
+                                    
