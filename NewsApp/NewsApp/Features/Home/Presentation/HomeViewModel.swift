@@ -15,6 +15,8 @@ final class HomeViewModel {
     private(set) var isLoading: Bool = false
     private(set) var errorMessage: String = ""
     
+    var onUpdate: (() -> Void)?
+    
     init(loader: FeedLoader) {
         self.loader = loader
     }
@@ -28,6 +30,9 @@ final class HomeViewModel {
         do {
             news = try await loader.load()
             print(news.count, "EYUPHAN")
+            await MainActor.run {
+                onUpdate?()
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
