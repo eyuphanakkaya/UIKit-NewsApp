@@ -35,6 +35,7 @@ final class HomeViewController: UIViewController {
         super.viewWillAppear(animated)
         Task {
             await viewModel.load()
+            await viewModel.fetchReadingList()
         }
     }
 }
@@ -91,7 +92,19 @@ extension HomeViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        cell.configure(with: viewModel.news[indexPath.row])
+        let item = viewModel.news[indexPath.row]
+        let isBookmarked = viewModel.readingList.contains { $0.id == item.id }
+        
+        cell.configure(with: item, isBookMarked: isBookmarked)
+        
+        // MARK: - Action
+        cell.onBookmarkToggled = { [weak self] _ in
+            guard let self else { return }
+            Task {
+                await self.viewModel.toggleReadingList(item)
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        }
         return cell
     }
 }
