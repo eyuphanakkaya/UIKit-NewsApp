@@ -20,7 +20,17 @@ final class NewsCell: UITableViewCell {
     private let creatorLabel = UILabel()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
+    
+    private let horizontalStackView = UIStackView()
     private let dateLabel = UILabel()
+    private let readListButton = UIButton()
+    
+    var onBookmarkToggled: ((Bool) -> Void)?
+
+    private var isBookMarked: Bool = false {
+        didSet { updateBookMarkButton() }
+    }
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,14 +46,16 @@ final class NewsCell: UITableViewCell {
         
         newsImageView.kf.cancelDownloadTask()
         newsImageView.image = nil
+        onBookmarkToggled = nil
     }
     
-    func configure(with items: NewsModel) {
+    func configure(with items: NewsModel, isBookMarked: Bool) {
         configureImage(image: items.imageURL)
         creatorLabel.text = items.creatorText
         titleLabel.text = items.title
         descriptionLabel.text = items.description
         dateLabel.text = items.pubDate
+        self.isBookMarked = isBookMarked
     }
     
     private func configureImage(image: String?) {
@@ -55,12 +67,26 @@ final class NewsCell: UITableViewCell {
         newsImageView.kf.setImage(with: url)
     }
     
+    // MARK: - Action
+    
+    private func updateBookMarkButton() {
+        let imageName = isBookMarked ? "heart.fill" : "heart"
+        readListButton.setImage(UIImage(systemName: imageName), for: .normal)
+    }
+    
+    @objc private func bookMarkTapped() {
+        isBookMarked.toggle()
+        onBookmarkToggled?(isBookMarked)
+    }
+    
+    
 }
 
 private extension NewsCell {
     func setupViews() {
         selectionStyle = .none
         
+        readListButton.addTarget(self, action: #selector(bookMarkTapped), for: .touchUpInside)
         
         mainStackView.axis = .horizontal
         mainStackView.spacing = 8
@@ -84,8 +110,15 @@ private extension NewsCell {
         descriptionLabel.numberOfLines = 2
         descriptionLabel.textColor = .secondaryLabel
         
+        horizontalStackView.axis = .horizontal
+        horizontalStackView.spacing = 4
+        horizontalStackView.distribution = .fillProportionally
+        
         dateLabel.font = .systemFont(ofSize: 8, weight: .light)
         dateLabel.textColor = .tertiaryLabel
+        
+        readListButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        readListButton.setTitleColor(.black, for: .normal)
         
         setupConstraints()
     }
@@ -108,11 +141,20 @@ private extension NewsCell {
             make.width.height.equalTo(100)
         }
         
+        horizontalStackView.addArrangedSubviews(
+            dateLabel,
+            readListButton
+        )
+        
+        readListButton.snp.makeConstraints { make in
+            make.width.height.equalTo(32)
+        }
+        
         seperateStackView.addArrangedSubviews(
             creatorLabel,
             titleLabel,
             descriptionLabel,
-            dateLabel
+            horizontalStackView,
         )
     }
 }
