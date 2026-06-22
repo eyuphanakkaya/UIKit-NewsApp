@@ -11,15 +11,20 @@ import NewsApp
 final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
-        let url = URL(string: "https://dummy.url")!
-        let client = HTTPClientSpy()
-        let _ = RemoteFeedLoader(baseURL: url, client: client)
-        
+        let ( _ , client) = makeSUT()
         
         XCTAssertTrue(client.requestURLs.isEmpty)
     }
     
     // MARK: - Helpers
+    private func makeSUT(_ url: URL = URL(string: "https://dummy.url")!) -> (sut: FeedLoader, client: HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteFeedLoader(baseURL: url, client: client)
+        
+        return (sut, client)
+    }
+    
+    
     private final class HTTPClientSpy: HTTPClient {
         var requestURLs = [URL]()
         
