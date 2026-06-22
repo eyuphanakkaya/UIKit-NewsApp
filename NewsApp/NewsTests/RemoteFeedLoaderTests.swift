@@ -39,6 +39,22 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestURLs, [url, url])
     }
     
+    func test_load_deliversErrorOnClientError() async {
+        let (sut, client) = makeSUT()
+        let expectError =  NSError(domain: "Test", code: 0)
+        
+        client.stubbedResult = .failure(expectError)
+        
+        do {
+            let result = try await sut.load()
+            XCTFail("Expected error but got \(result)")
+        } catch let receiveError as NSError {
+            XCTAssertEqual(receiveError.domain, expectError.domain)
+            XCTAssertEqual(receiveError.code, expectError.code)
+        }
+        
+    }
+    
     // MARK: - Helpers
     private func makeSUT(_ url: URL = URL(string: "https://dummy.url")!) -> (sut: FeedLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
