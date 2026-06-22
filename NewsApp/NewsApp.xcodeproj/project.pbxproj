@@ -32,6 +32,7 @@
 		A40A23312FE187F700055998 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A45F56912FE9237600779081 /* NewsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A460759F2FE925D10076BD77 /* NewsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A460777D2FE935990076BD77 /* NewsTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = NewsTests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -90,6 +91,7 @@
 		A40A23282FE187F700055998 = {
 			isa = PBXGroup;
 			children = (
+				A460777D2FE935990076BD77 /* NewsTests.xctestplan */,
 				A40A23332FE187F700055998 /* NewsApp */,
 				A46075A02FE925D10076BD77 /* NewsTests */,
 				A40A23322FE187F700055998 /* Products */,
