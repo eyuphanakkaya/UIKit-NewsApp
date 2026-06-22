@@ -19,7 +19,7 @@ final public class RemoteFeedLoader: FeedLoader, PaginatedFeedLoader {
         self.client = client
     }
     
-    func load() async throws -> [NewsModel] {
+    public func load() async throws -> [NewsModel] {
         nextPage = nil
         hasMore = true
         return try await fetch()

@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol FeedLoader {
+public protocol FeedLoader: Sendable {
     func load() async throws -> [NewsModel]
 }
