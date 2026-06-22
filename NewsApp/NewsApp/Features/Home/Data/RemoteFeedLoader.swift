@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class RemoteFeedLoader: FeedLoader, PaginatedFeedLoader {
+final public class RemoteFeedLoader: FeedLoader, PaginatedFeedLoader {
     private let baseURL: URL
     private let client: HTTPClient
     
     private var nextPage: String? = nil
     private(set) var hasMore: Bool = true
     
-    init(baseURL: URL, client: HTTPClient) {
+    public init(baseURL: URL, client: HTTPClient) {
         self.baseURL = baseURL
         self.client = client
     }
