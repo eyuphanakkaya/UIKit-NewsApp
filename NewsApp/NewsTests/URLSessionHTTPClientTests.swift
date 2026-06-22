@@ -25,6 +25,29 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     
+    func test_getFromURL_failDataTask() async {
+        let url = URL(string: "https://any-url.com")!
+        let expectedError = NSError(domain: "any", code: 0)
+        let sut = makeSUT()
+        
+        URLProtocolStub.stub(
+            data: nil,
+            response: nil,
+            error: expectedError
+        )
+        
+        do {
+            _ = try await sut.get(url: url)
+            XCTFail("Expected error but got success")
+        } catch  let receivedError as NSError {
+            XCTAssertEqual(receivedError.domain, expectedError.domain)
+            XCTAssertEqual(receivedError.code, expectedError.code)
+        }
+    }
+    
+    
+    
+    
     
     
     // MARK: - Helpers
