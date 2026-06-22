@@ -7,13 +7,6 @@
 
 import Foundation
 
-
-protocol PaginatedFeedLoader {
-    func loadMore() async throws -> [NewsModel]
-    var hasMore: Bool { get }
-}
-
-
 final class RemoteFeedLoader: FeedLoader, PaginatedFeedLoader {
     private let baseURL: URL
     private let client: HTTPClient
