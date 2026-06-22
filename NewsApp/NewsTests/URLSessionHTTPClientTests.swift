@@ -26,23 +26,12 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     
     func test_getFromURL_failDataTask() async {
-        let url = anyURL()
-        let expectedError = NSError(domain: "any", code: 0)
-        let sut = makeSUT()
+        let expectedError = anyNSError()
         
-        URLProtocolStub.stub(
-            data: nil,
-            response: nil,
-            error: expectedError
-        )
+        let receivedError = await resultErrorFor((nil, nil, expectedError))
         
-        do {
-            _ = try await sut.get(url: url)
-            XCTFail("Expected error but got success")
-        } catch  let receivedError as NSError {
-            XCTAssertEqual(receivedError.domain, expectedError.domain)
-            XCTAssertEqual(receivedError.code, expectedError.code)
-        }
+        XCTAssertEqual(receivedError?.domain, expectedError.domain)
+        XCTAssertEqual(receivedError?.code, expectedError.code)
     }
     
     
@@ -88,6 +77,10 @@ final class URLSessionHTTPClientTests: XCTestCase {
         Data("any data".utf8)
     }
     
+    private func anyNSError() -> NSError {
+        NSError(domain: "any error", code: 1)
+    }
+    
     private func anyHTTPURLResponse() -> HTTPURLResponse {
         return HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
     }
@@ -96,6 +89,16 @@ final class URLSessionHTTPClientTests: XCTestCase {
         return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }
     
+    private func resultErrorFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, file: StaticString = #filePath,line: UInt = #line) async  -> NSError? {
+        do {
+            let result = try await resultFor(values, file: file, line: line)
+            XCTFail("Expected error but got success \(result)")
+            return nil
+        } catch {
+            return error as NSError
+        }
+        
+    }
     
     private func resultSuccessFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, file: StaticString = #filePath,line: UInt = #line) async  -> (Data, HTTPURLResponse)? {
         do {
