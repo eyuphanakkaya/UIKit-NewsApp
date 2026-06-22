@@ -47,40 +47,25 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     
     func test_getFromURL_successDataTask() async throws {
-        let url = anyURL()
         let anyData = anyData()
         let anyResponse =  anyHTTPURLResponse()
-        let sut = makeSUT()
         
-        URLProtocolStub.stub(
-            data: anyData,
-            response: anyResponse,
-            error: nil
-        )
-        
-        let (data, response) = try await sut.get(url: url)
-        
-        XCTAssertEqual(anyData, data)
-        XCTAssertEqual(anyResponse.url, response.url)
-        XCTAssertEqual(anyResponse.statusCode, response.statusCode)
+        let receivedValue = await resultSuccessFor((anyData, anyResponse, nil))
+
+        XCTAssertEqual(receivedValue?.0, anyData)
+        XCTAssertEqual(anyResponse.url,receivedValue?.1.url)
+        XCTAssertEqual(anyResponse.statusCode,receivedValue?.1.statusCode)
     }
     
-    func test_getFromURL_successEmptyDataTask() async throws {
-        let url = anyURL()
+    func test_getFromURL_successEmptyDataTask() async {
         let emptyData = Data()
         let anyResponse =  anyHTTPURLResponse()
-        let sut = makeSUT()
         
-        URLProtocolStub.stub(
-            data: emptyData,
-            response: anyResponse,
-            error: nil)
-        
-        let (data, response) = try await sut.get(url: url)
-        
-        XCTAssertEqual(data, emptyData)
-        XCTAssertEqual(anyResponse.url, response.url)
-        XCTAssertEqual(anyResponse.statusCode, response.statusCode)
+        let receivedValue = await resultSuccessFor((emptyData, anyResponse, nil))
+    
+        XCTAssertEqual(receivedValue?.0, emptyData)
+        XCTAssertEqual(anyResponse.url,receivedValue?.1.url)
+        XCTAssertEqual(anyResponse.statusCode,receivedValue?.1.statusCode)
     }
     
     
@@ -109,6 +94,26 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     private func nonHTTPURLResponse() -> URLResponse {
         return URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+    }
+    
+    
+    private func resultSuccessFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?, file: StaticString = #filePath,line: UInt = #line) async  -> (Data, HTTPURLResponse)? {
+        do {
+            let result = try await resultFor(values, file: file, line: line)
+            return result
+        } catch {
+            XCTFail("Expected failure", file: file, line: line)
+            return nil
+        }
+        
+    }
+    
+    private func resultFor(_ values: (data: Data?, response: URLResponse?, error: Error?)?,  file: StaticString = #file, line: UInt = #line) async throws  -> (Data, HTTPURLResponse) {
+        values.map { URLProtocolStub.stub(data: $0, response: $1, error: $2) }
+        
+        let sut = makeSUT(file: file,line: line)
+        
+        return try await sut.get(url: anyURL())
     }
     
     private final class URLProtocolStub: URLProtocol {
