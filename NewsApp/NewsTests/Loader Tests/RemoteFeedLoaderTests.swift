@@ -131,6 +131,22 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(client.requestURLs.count, 1)
     }
     
+    func test_loadMore_requestsNextPageURL() async throws {
+        let url = URL(string: "https://www.example.com")!
+        let (sut, client) = makeSUT(url)
+        
+        client.stubbedResult = .success((feedJSONWithNextPage("token123"), anyHTTPURLResponse(for: url)))
+        
+        _ = try await sut.load()
+        
+        let expectedURL = URL(string: "https://www.example.com?page=token123")!
+        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse(for: expectedURL)))
+        
+        _ = try await sut.loadMore()
+        
+        XCTAssertEqual(client.requestURLs, [url, expectedURL])
+    }
+    
     
     func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() async throws {
         let url = URL(string: "https://any-url.com")!
@@ -175,6 +191,14 @@ final class RemoteFeedLoaderTests: XCTestCase {
             "nextPage": NSNull()
         ]
 
+        return try! JSONSerialization.data(withJSONObject: json)
+    }
+    
+    private func feedJSONWithNextPage(_ token: String) -> Data {
+        let json: [String: Any] = [
+            "results": [],
+            "nextPage": token
+        ]
         return try! JSONSerialization.data(withJSONObject: json)
     }
     
