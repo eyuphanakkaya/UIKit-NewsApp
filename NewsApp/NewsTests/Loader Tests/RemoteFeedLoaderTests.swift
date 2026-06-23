@@ -81,19 +81,6 @@ final class RemoteFeedLoaderTests: XCTestCase {
         return (sut, client)
     }
     
-    
-    private final class HTTPClientSpy: HTTPClient {
-        private(set) var requestURLs = [URL]()
-        var stubbedResult: Result<(Data, HTTPURLResponse), Error> = .failure(
-            NSError(domain: "HTTPClientSpy", code: 0)
-        )
-        
-        func get(url: URL) async throws -> (Data, HTTPURLResponse) {
-            requestURLs.append(url)
-            return try stubbedResult.get()
-        }
-    }
-    
     private func validJSON() -> Data {
         let json: [String: Any] = [
             "results": [],
