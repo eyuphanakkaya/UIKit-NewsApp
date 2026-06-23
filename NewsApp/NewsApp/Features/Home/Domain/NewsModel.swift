@@ -15,6 +15,15 @@ public struct NewsModel: Equatable {
     public let pubDate: String
     public let description: String?
     
+    public init(id: String, title: String, imageURL: String?, creator: [String]?, pubDate: String, description: String?) {
+        self.id = id
+        self.title = title
+        self.imageURL = imageURL
+        self.creator = creator
+        self.pubDate = pubDate
+        self.description = description
+    }
+    
     var creatorText: String? {
         creator?.joined(separator: ", ").capitalized
     }
