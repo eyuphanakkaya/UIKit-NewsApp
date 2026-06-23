@@ -19,4 +19,14 @@ final class HTTPClientSpy: HTTPClient {
         requestURLs.append(url)
         return try stubbedResult.get()
     }
+    
+    // MARK: - Helpers
+    func completeWithSuccess(_ data: Data, for url: URL = URL(string: "https://any-url.com")!) {
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        stubbedResult = .success((data, response))
+    }
+    
+    func completeWithError(_ error: Error = NSError(domain: "HTTPClientSpy", code: 0)) {
+        stubbedResult = .failure(error)
+    }
 }

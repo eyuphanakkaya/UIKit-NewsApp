@@ -20,7 +20,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "https://www.example.com")!
         let (sut, client) = makeSUT(url)
         
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse(for: url)))
+        client.completeWithSuccess(emptyFeedJSON(), for: url)
 
         _ = try await sut.load()
         
@@ -31,7 +31,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "https://www.example.com")!
         let (sut, client) = makeSUT(url)
         
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse(for: url)))
+        client.completeWithSuccess(emptyFeedJSON(), for: url)
 
         _ = try await sut.load()
         _ = try await sut.load()
@@ -43,7 +43,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         let expectError =  NSError(domain: "Test", code: 0)
         
-        client.stubbedResult = .failure(expectError)
+        client.completeWithError(expectError)
         
         do {
             let result = try await sut.load()
@@ -52,18 +52,14 @@ final class RemoteFeedLoaderTests: XCTestCase {
             XCTAssertEqual(receiveError.domain, expectError.domain)
             XCTAssertEqual(receiveError.code, expectError.code)
         }
-        
     }
     
     
     func test_load_deliversErrorOnInvalidJSON() async {
         let (sut, client) = makeSUT()
+        let invalidJson = Data("invalid json".utf8)
         
-        client.stubbedResult = .success(
-            (
-                Data("invalid json".utf8),
-                anyHTTPURLResponse()
-            ))
+        client.completeWithSuccess(invalidJson)
         
         do {
             let result = try await sut.load()
@@ -76,8 +72,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
     
     func test_load_deliversSuccessOnEmptyList() async throws {
         let (sut, client) = makeSUT()
-        
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse()))
+
+        client.completeWithSuccess(emptyFeedJSON())
         
         let result = try await sut.load()
         
@@ -105,13 +101,12 @@ final class RemoteFeedLoaderTests: XCTestCase {
             description: "Second description"
         )
         
-        client.stubbedResult = .success((
+        client.completeWithSuccess(
             makeItemsJSON([
-                item1.json,
-                item2.json
-            ]),
-            anyHTTPURLResponse()
-        ))
+            item1.json,
+            item2.json
+        ]))
+        
         
         let result = try await sut.load()
         
@@ -123,11 +118,11 @@ final class RemoteFeedLoaderTests: XCTestCase {
 
         let (sut, client) = makeSUT(url)
         
-        client.stubbedResult = .success((feedJSONWithNextPage("token123"), anyHTTPURLResponse(for: url)))
+        client.completeWithSuccess(feedJSONWithNextPage("token123"), for: url)
         
         _ = try await sut.load()
         
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse(for: url)))
+        client.completeWithSuccess(emptyFeedJSON(), for: url)
         _ = try await sut.load()
         
         XCTAssertEqual(client.requestURLs, [url, url])
@@ -137,7 +132,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     func test_loadMore_doesNotRequestDataWhenHasNoMore() async throws {
         let (sut, client) = makeSUT()
         
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse()))
+        client.completeWithSuccess(emptyFeedJSON())
         
         _ = try await sut.load()
         
@@ -150,12 +145,12 @@ final class RemoteFeedLoaderTests: XCTestCase {
         let url = URL(string: "https://www.example.com")!
         let (sut, client) = makeSUT(url)
         
-        client.stubbedResult = .success((feedJSONWithNextPage("token123"), anyHTTPURLResponse(for: url)))
+        client.completeWithSuccess(feedJSONWithNextPage("token123"), for: url)
         
         _ = try await sut.load()
         
         let expectedURL = URL(string: "https://www.example.com?page=token123")!
-        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse(for: expectedURL)))
+        client.completeWithSuccess(emptyFeedJSON(), for: expectedURL)
         
         _ = try await sut.loadMore()
         
