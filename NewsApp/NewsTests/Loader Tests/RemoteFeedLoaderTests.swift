@@ -118,6 +118,20 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(result, [item1.model, item2.model])
     }
     
+    
+    func test_loadMore_doesNotRequestDataWhenHasNoMore() async throws {
+        let (sut, client) = makeSUT()
+        
+        client.stubbedResult = .success((emptyFeedJSON(), anyHTTPURLResponse()))
+        
+        _ = try await sut.load()
+        
+        _ = try await sut.loadMore()
+        
+        XCTAssertEqual(client.requestURLs.count, 1)
+    }
+    
+    
     func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() async throws {
         let url = URL(string: "https://any-url.com")!
         let client = HTTPClientSpy()
@@ -137,7 +151,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT(_ url: URL = URL(string: "https://any-url.com")!) -> (sut: FeedLoader, client: HTTPClientSpy) {
+    private func makeSUT(_ url: URL = URL(string: "https://any-url.com")!) -> (sut: FeedLoader & PaginatedFeedLoader , client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(baseURL: url, client: client)
         
