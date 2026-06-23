@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 final class HomeViewModel {
-    private let loader: FeedLoader
+    private let loader: FeedLoader & PaginatedFeedLoader
     private let store: ReadingListStore
     
     private var news: [NewsModel] = []
@@ -23,7 +23,7 @@ final class HomeViewModel {
     var onUpdate: (() -> Void)?
     var onSelectItem: ((NewsModel) -> Void)?
     
-    init(loader: FeedLoader, store: ReadingListStore) {
+    init(loader: FeedLoader & PaginatedFeedLoader, store: ReadingListStore) {
         self.loader = loader
         self.store = store
     }
@@ -45,6 +45,28 @@ final class HomeViewModel {
         }
     }
     
+    func loadMore() async {
+        guard loader.hasMore,
+              !isLoading else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let newItems = try await loader.loadMore()
+            allNews += newItems
+            news = allNews
+            onUpdate?()
+        } catch {
+            errorMessage = error.localizedDescription
+            onUpdate?()
+        }
+    }
+    
+}
+
+extension HomeViewModel {
+    
     func search(_ query: String) {
         guard !query.isEmpty else {
 
@@ -59,7 +81,6 @@ final class HomeViewModel {
 
         onUpdate?()
     }
-    
 }
 
 extension HomeViewModel {
@@ -125,15 +146,6 @@ extension HomeViewModel {
     
     func didSelectItem(at index: Int) {
         let item = news[index]
-
-        let selected = NewsCellViewModel(
-            title: item.title,
-            description: item.description,
-            creator: item.creatorText,
-            date: item.pubDate,
-            imageURL: item.imageURL,
-            isBookmarked: readingList.contains { $0.id == item.id }
-        )
 
         onSelectItem?(item)
     }

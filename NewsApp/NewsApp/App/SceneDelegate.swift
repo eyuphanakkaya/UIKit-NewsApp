@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         
         let loader = RemoteFeedLoader(
-            url: remoteURL,
+            baseURL: remoteURL,
             client: client
         )
         

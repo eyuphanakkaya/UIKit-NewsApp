@@ -7,17 +7,47 @@
 
 import Foundation
 
-final class RemoteFeedLoader: FeedLoader {
-    private let url: URL
+final public class RemoteFeedLoader: FeedLoader, PaginatedFeedLoader {
+    private let baseURL: URL
     private let client: HTTPClient
     
-    init(url: URL, client: HTTPClient) {
-        self.url = url
+    private var nextPage: String? = nil
+    private(set) public var hasMore: Bool = true
+    
+    public init(baseURL: URL, client: HTTPClient) {
+        self.baseURL = baseURL
         self.client = client
     }
     
-    func load() async throws -> [NewsModel] {
+    public func load() async throws -> [NewsModel] {
+        nextPage = nil
+        hasMore = true
+        return try await fetch()
+    }
+    
+    public func loadMore() async throws -> [NewsModel] {
+        guard hasMore else { return [] }
+        return try await fetch()
+    }
+    
+    
+    private func fetch() async throws -> [NewsModel] {
+        let url = makeURL(page: nextPage)
         let (data, response) = try await client.get(url: url)
-        return try RemoteFeedMapper.map(data, from: response)
+        let result = try RemoteFeedMapper.map(data, from: response)
+        nextPage = result.nextPage
+        hasMore = result.nextPage != nil
+        return result.news
+    }
+    
+    private func makeURL(page: String?) -> URL {
+        guard let page,
+              var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false) else {
+            return baseURL
+        }
+        var queryItems = components.queryItems ?? []
+        queryItems.append(URLQueryItem(name: "page", value: page))
+        components.queryItems = queryItems
+        return components.url ?? baseURL
     }
 }

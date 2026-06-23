@@ -9,6 +9,7 @@ import Foundation
 enum RemoteFeedMapper {
     struct Root: Decodable {
         private let results: [NewsModelDTO]
+        let nextPage: String?
         
         private struct NewsModelDTO: Decodable {
             let article_id: String
@@ -34,12 +35,12 @@ enum RemoteFeedMapper {
     }
     
     
-    static func map(_ data: Data, from response: HTTPURLResponse) throws -> [NewsModel] {
+    static func map(_ data: Data, from response: HTTPURLResponse) throws -> (news: [NewsModel], nextPage: String?){
         guard response.statusCode == 200 else {
             fatalError()
         }
         let decoder = JSONDecoder()
         let item = try decoder.decode(Root.self, from: data)
-        return item.news
+        return (item.news, item.nextPage)
     }
 }

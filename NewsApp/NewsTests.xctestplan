@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "A80446EB-71D4-46A2-8C62-226ABE5ED76C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "skippedTests" : {
+        "suites" : [
+          {
+            "name" : "NewsTests"
+          }
+        ]
+      },
+      "target" : {
+        "containerPath" : "container:NewsApp.xcodeproj",
+        "identifier" : "A460759E2FE925D10076BD77",
+        "name" : "NewsTests"
+      }
+    }
+  ],
+  "version" : 2
+}

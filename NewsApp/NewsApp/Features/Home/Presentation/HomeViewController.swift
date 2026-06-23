@@ -45,6 +45,7 @@ private extension HomeViewController {
         tableView = UITableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         tableView.register(NewsCell.self, forCellReuseIdentifier: NewsCell.reuseIdentifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 120
@@ -105,6 +106,23 @@ extension HomeViewController: UITableViewDataSource {
         }
 
         return cell
+    }
+}
+
+extension HomeViewController: UITableViewDataSourcePrefetching {
+    func tableView(
+        _ tableView: UITableView,
+        prefetchRowsAt indexPaths: [IndexPath]
+    ) {
+        guard indexPaths.contains(
+            where: { $0.row >= viewModel.numberOfItems() - 3 }
+        ) else {
+            return
+        }
+
+        Task {
+            await viewModel.loadMore()
+        }
     }
 }
 
