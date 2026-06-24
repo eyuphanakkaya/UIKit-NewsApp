@@ -30,6 +30,27 @@ final class UserDefaultsReadingListStoreTests: XCTestCase {
         XCTAssertEqual(result, [item])
     }
     
+    func test_insert_replacesExistingItemWithSameID() async throws {
+        let sut = makeSUT()
+        
+        let first = makeItem(
+            id: "1",
+            title: "Old"
+        )
+        
+        let updated = makeItem(
+            id: "1",
+            title: "New"
+        )
+        
+        try await sut.insert(first)
+        try await sut.insert(updated)
+        
+        let result = try await sut.retrieve()
+        
+        XCTAssertEqual(result, [updated])
+    }
+    
     
     func test_delete_removesInsertedItem() async throws {
         let sut = makeSUT()
