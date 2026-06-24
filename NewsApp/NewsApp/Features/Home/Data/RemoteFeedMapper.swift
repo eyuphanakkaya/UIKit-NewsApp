@@ -7,6 +7,11 @@
 import Foundation
 
 enum RemoteFeedMapper {
+    
+    enum Error: Swift.Error {
+        case invalidData
+    }
+    
     struct Root: Decodable {
         private let results: [NewsModelDTO]
         let nextPage: String?
@@ -37,7 +42,7 @@ enum RemoteFeedMapper {
     
     static func map(_ data: Data, from response: HTTPURLResponse) throws -> (news: [NewsModel], nextPage: String?){
         guard response.statusCode == 200 else {
-            fatalError()
+            throw Error.invalidData
         }
         let decoder = JSONDecoder()
         let item = try decoder.decode(Root.self, from: data)
