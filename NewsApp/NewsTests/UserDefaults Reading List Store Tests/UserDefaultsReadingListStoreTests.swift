@@ -10,6 +10,13 @@ import NewsApp
 
 final class UserDefaultsReadingListStoreTests: XCTestCase {
     
+    func test_retrieve_emptyList() async throws {
+        let sut = makeSUT()
+        
+        let result = try await sut.retrieve()
+        
+        XCTAssertTrue(result.isEmpty)
+    }
     
     func test_insert_deliverInsertedItem() async throws {
         let sut = makeSUT()
