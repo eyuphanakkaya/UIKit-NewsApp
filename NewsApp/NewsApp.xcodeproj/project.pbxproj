@@ -12,13 +12,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A45F56952FE9237600779081 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A40A23292FE187F700055998 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A40A23302FE187F700055998;
-			remoteInfo = NewsApp;
-		};
 		A46075A32FE925D10076BD77 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A40A23292FE187F700055998 /* Project object */;
@@ -30,7 +23,6 @@
 
 /* Begin PBXFileReference section */
 		A40A23312FE187F700055998 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A45F56912FE9237600779081 /* NewsAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A460759F2FE925D10076BD77 /* NewsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,13 +62,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A45F568E2FE9237600779081 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A460759C2FE925D10076BD77 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -100,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				A40A23312FE187F700055998 /* NewsApp.app */,
-				A45F56912FE9237600779081 /* NewsAppTests.xctest */,
 				A460759F2FE925D10076BD77 /* NewsTests.xctest */,
 			);
 			name = Products;
@@ -132,26 +116,6 @@
 			productName = NewsApp;
 			productReference = A40A23312FE187F700055998 /* NewsApp.app */;
 			productType = "com.apple.product-type.application";
-		};
-		A45F56902FE9237600779081 /* NewsAppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A45F56972FE9237600779081 /* Build configuration list for PBXNativeTarget "NewsAppTests" */;
-			buildPhases = (
-				A45F568D2FE9237600779081 /* Sources */,
-				A45F568E2FE9237600779081 /* Frameworks */,
-				A45F568F2FE9237600779081 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A45F56962FE9237600779081 /* PBXTargetDependency */,
-			);
-			name = NewsAppTests;
-			packageProductDependencies = (
-			);
-			productName = NewsAppTests;
-			productReference = A45F56912FE9237600779081 /* NewsAppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		A460759E2FE925D10076BD77 /* NewsTests */ = {
 			isa = PBXNativeTarget;
@@ -189,10 +153,6 @@
 					A40A23302FE187F700055998 = {
 						CreatedOnToolsVersion = 26.5;
 					};
-					A45F56902FE9237600779081 = {
-						CreatedOnToolsVersion = 26.5;
-						TestTargetID = A40A23302FE187F700055998;
-					};
 					A460759E2FE925D10076BD77 = {
 						CreatedOnToolsVersion = 26.5;
 						TestTargetID = A40A23302FE187F700055998;
@@ -218,7 +178,6 @@
 			projectRoot = "";
 			targets = (
 				A40A23302FE187F700055998 /* NewsApp */,
-				A45F56902FE9237600779081 /* NewsAppTests */,
 				A460759E2FE925D10076BD77 /* NewsTests */,
 			);
 		};
@@ -226,13 +185,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		A40A232F2FE187F700055998 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A45F568F2FE9237600779081 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,13 +208,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A45F568D2FE9237600779081 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A460759B2FE925D10076BD77 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -273,11 +218,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A45F56962FE9237600779081 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A40A23302FE187F700055998 /* NewsApp */;
-			targetProxy = A45F56952FE9237600779081 /* PBXContainerItemProxy */;
-		};
 		A46075A42FE925D10076BD77 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A40A23302FE187F700055998 /* NewsApp */;
@@ -469,46 +409,6 @@
 			};
 			name = Release;
 		};
-		A45F56982FE9237600779081 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.eyuphanakkaya.NewsAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewsApp";
-			};
-			name = Debug;
-		};
-		A45F56992FE9237600779081 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.eyuphanakkaya.NewsAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NewsApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NewsApp";
-			};
-			name = Release;
-		};
 		A46075A52FE925D10076BD77 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -566,15 +466,6 @@
 			buildConfigurations = (
 				A40A23452FE187F800055998 /* Debug */,
 				A40A23462FE187F800055998 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A45F56972FE9237600779081 /* Build configuration list for PBXNativeTarget "NewsAppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A45F56982FE9237600779081 /* Debug */,
-				A45F56992FE9237600779081 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
