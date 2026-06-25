@@ -14,14 +14,19 @@ final class HomeViewModelTests: XCTestCase {
     func test_load_transitionsThroughLoadingToLoaded() async {
         let (sut, _) = makeSUT()
     
-        await expect(sut, states: [.loading, .loaded])
+        await expect(sut, states: [.loading, .loaded]) {
+            await sut.load()
+        }
+        
     }
     
     func test_load_transitionsThroughLoadingToNetworkError() async {
         let (sut, client) = makeSUT()
         client.stubbedError = anyNSError()
         
-        await expect(sut, states: [.loading, .failed(.network)])
+        await expect(sut, states: [.loading, .failed(.network)]) {
+            await sut.load()
+        }
     }
     
     func test_load_deliversCorrectItemCount_onSuccess() async {
@@ -63,15 +68,10 @@ final class HomeViewModelTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         client.hasMore = true
-        var capturedStates: [HomeViewModel.ViewState] = []
-        sut.onUpdate = { [weak sut] in
-            guard let sut else { return }
-            capturedStates.append(sut.state)
+        
+        await expect(sut, states: [.loading, .loaded]) {
+            await sut.loadMore()
         }
-        
-        await sut.loadMore()
-        
-        XCTAssertEqual(capturedStates, [.loading, .loaded])
     }
     
     func test_loadMore_transitionsThroughLoadingToNetworkError() async {
@@ -79,15 +79,9 @@ final class HomeViewModelTests: XCTestCase {
         client.hasMore = true
         client.stubbedError = anyNSError()
         
-        var capturedStates: [HomeViewModel.ViewState] = []
-        sut.onUpdate = { [weak sut] in
-            guard let sut else { return }
-            capturedStates.append(sut.state)
+        await expect(sut, states: [.loading, .failed(.network)]) {
+            await sut.loadMore()
         }
-        
-        await sut.loadMore()
-        
-        XCTAssertEqual(capturedStates, [.loading, .failed(.network)])
     }
     
     
@@ -109,16 +103,23 @@ final class HomeViewModelTests: XCTestCase {
         return (sut, client)
     }
     
-    private func expect(_ sut: HomeViewModel, states: [HomeViewModel.ViewState]) async {
+    private func expect(
+        _ sut: HomeViewModel,
+        states: [HomeViewModel.ViewState],
+        action: () async -> Void,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
         var capturedStates: [HomeViewModel.ViewState] = []
+        
         sut.onUpdate = { [weak sut] in
             guard let sut else { return }
             capturedStates.append(sut.state)
         }
         
-        await sut.load()
+        await action()
         
-        XCTAssertEqual(capturedStates, states)
+        XCTAssertEqual(capturedStates, states, file: file, line: line)
     }
     
     
