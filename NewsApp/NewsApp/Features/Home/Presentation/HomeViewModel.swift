@@ -77,7 +77,7 @@ final public class HomeViewModel {
 
 extension HomeViewModel {
     
-    func search(_ query: String) {
+    public func search(_ query: String) {
         guard !query.isEmpty else {
 
             news = allNews

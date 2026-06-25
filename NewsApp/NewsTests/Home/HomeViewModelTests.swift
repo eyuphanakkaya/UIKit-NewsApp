@@ -117,6 +117,21 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(sut.numberOfItems(), 2)
     }
     
+    func test_search_deliversMatchingItems_onQuery() async {
+        let (sut, client) = makeSUT()
+        client.stubbedResult = [
+            uniqueItem(title: "Swift tutorial"),
+            uniqueItem(title: "iOS Development"),
+            uniqueItem(title: "Swift concurrency")
+        ]
+        
+        await sut.load()
+        
+        sut.search("Swift")
+        
+        XCTAssertEqual(sut.numberOfItems(), 2)
+    }
+    
     
     // MARK: - Helpers
     private func makeSUT(
