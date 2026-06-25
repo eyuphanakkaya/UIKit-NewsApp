@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserDefaultsReadingListStore: ReadingListStore {
+final public class UserDefaultsReadingListStore: ReadingListStore {
     
     private struct CodableNewsModel: Codable {
         let id: String
@@ -42,25 +42,25 @@ final class UserDefaultsReadingListStore: ReadingListStore {
     private let userDefaults: UserDefaults
     private let key: String
     
-    init(userDefaults: UserDefaults, key: String = "readingList") {
+    public init(userDefaults: UserDefaults, key: String = "readingList") {
         self.userDefaults = userDefaults
         self.key = key
     }
     
-    func insert(_ item: NewsModel) async throws {
+    public func insert(_ item: NewsModel) async throws {
         var items = try loadItems()
         items.removeAll { $0.id == item.id }
         items.append(CodableNewsModel(item))
         try save(items)
     }
     
-    func delete(_ itemID: String) async throws {
+    public func delete(_ itemID: String) async throws {
         var items = try loadItems()
         items.removeAll { $0.id == itemID }
         try save(items)
     }
     
-    func retrieve() async throws -> [NewsModel] {
+    public func retrieve() async throws -> [NewsModel] {
         try loadItems().map{$0.model}
     }
     
