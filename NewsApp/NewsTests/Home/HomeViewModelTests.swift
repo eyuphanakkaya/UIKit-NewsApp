@@ -11,6 +11,11 @@ import NewsApp
 @MainActor
 final class HomeViewModelTests: XCTestCase {
     
+    func test_init_stateIsIdle() {
+        let (sut, _) = makeSUT()
+        XCTAssertEqual(sut.state, .idle)
+    }
+    
     func test_load_transitionsThroughLoadingToLoaded() async {
         let (sut, _) = makeSUT()
     
