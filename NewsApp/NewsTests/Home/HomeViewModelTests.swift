@@ -59,6 +59,20 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(sut.numberOfItems(), 1)
     }
     
+    func test_loadMore_transitionsThroughLoadingToLoaded() async {
+        let (sut, client) = makeSUT()
+        
+        client.hasMore = true
+        var capturedStates: [HomeViewModel.ViewState] = []
+        sut.onUpdate = { [weak sut] in
+            guard let sut else { return }
+            capturedStates.append(sut.state)
+        }
+        
+        await sut.loadMore()
+        
+        XCTAssertEqual(capturedStates, [.loading, .loaded])
+    }
     
     
     // MARK: - Helpers
