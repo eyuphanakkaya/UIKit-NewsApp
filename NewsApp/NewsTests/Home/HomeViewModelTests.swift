@@ -163,6 +163,21 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(sut.numberOfItems(), 3)
     }
     
+    func test_search_deliversItems_insenstiveToCase() async {
+        let (sut, client) = makeSUT()
+        client.stubbedResult = [
+            uniqueItem(title: "Swift tutorial"),
+            uniqueItem(title: "iOS Development"),
+            uniqueItem(title: "swift concurrency")
+        ]
+        
+        await sut.load()
+        
+        sut.search("swift")
+
+        XCTAssertEqual(sut.numberOfItems(), 2)
+    }
+    
     
     // MARK: - Helpers
     private func makeSUT(
