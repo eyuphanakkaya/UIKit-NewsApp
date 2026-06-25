@@ -23,6 +23,22 @@ final class HomeViewModelTests: XCTestCase {
         
         XCTAssertEqual(capturedStates, [.loading, .loaded])
     }
+    
+    func test_load_transitionsThroughLoadingToNetworkError() async {
+        let (sut, client) = makeSUT()
+        client.stubbedError = anyNSError()
+        
+        var capturedStates: [HomeViewModel.ViewState] = []
+        sut.onUpdate = {
+            capturedStates.append(sut.state)
+        }
+        
+        await sut.load()
+        
+        XCTAssertEqual(capturedStates, [.loading, .failed(.network)])
+    }
+    
+    
     // MARK: - Helpers
     private func makeSUT() -> (sut: HomeViewModel, client: FeedLoaderSpy) {
         let store = UserDefaultsReadingListStore(
@@ -38,13 +54,17 @@ final class HomeViewModelTests: XCTestCase {
     
     final private class FeedLoaderSpy: HomeViewModel.FeedLoad {
         var hasMore: Bool = false
+        var stubbedError: Error?
+        var stubbedResult: [NewsModel] = []
 
         func load() async throws -> [NewsModel] {
-            return []
+            if let error = stubbedError { throw error }
+            return stubbedResult
         }
         
         func loadMore() async throws -> [NewsModel] {
-            return []
+            if let error = stubbedError { throw error }
+            return stubbedResult
         }
         
     }
