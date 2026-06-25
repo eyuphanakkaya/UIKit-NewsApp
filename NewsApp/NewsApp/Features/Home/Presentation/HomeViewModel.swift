@@ -53,7 +53,7 @@ final public class HomeViewModel {
         }
     }
     
-    func loadMore() async {
+    public func loadMore() async {
         guard loader.hasMore, state == .loaded else { return }
         
         transition(to: .loading)
