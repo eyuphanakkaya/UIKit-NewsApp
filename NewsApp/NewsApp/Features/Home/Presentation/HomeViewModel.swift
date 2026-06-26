@@ -16,7 +16,7 @@ final public class HomeViewModel {
     private var news: [NewsModel] = []
     private var allNews: [NewsModel] = []
     
-    private(set) var readingList: [NewsModel] = []
+    private(set) public var readingList: [NewsModel] = []
     
     public enum ViewState: Equatable {
         case idle
@@ -103,7 +103,7 @@ extension HomeViewModel {
         }
     }
     
-    func toggleBookmark(at index: Int) async {
+    public func toggleBookmark(at index: Int) async {
         let item = news[index]
 
         if readingList.contains(where: { $0.id == item.id }) {
