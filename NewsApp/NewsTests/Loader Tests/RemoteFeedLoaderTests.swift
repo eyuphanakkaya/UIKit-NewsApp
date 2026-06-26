@@ -17,15 +17,19 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    func makeSUT(_ url: URL = URL(string: "https://any-url.com")!) -> (sut: FeedLoader & PaginatedFeedLoader , client: HTTPClientSpy) {
-        let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(baseURL: url, client: client)
-        
-        trackForMemoryLeaks(client)
-        trackForMemoryLeaks(sut)
-        
-        return (sut, client)
-    }
+    func makeSUT(
+        _ url: URL = URL(string: "https://any-url.com")!,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (sut: FeedLoader & PaginatedFeedLoader , client: HTTPClientSpy) {
+            let client = HTTPClientSpy()
+            let sut = RemoteFeedLoader(baseURL: url, client: client)
+            
+            trackForMemoryLeaks(client, file: file, line: line)
+            trackForMemoryLeaks(sut, file: file, line: line)
+            
+            return (sut, client)
+        }
     
     func makeItem(
         id: String = "1",
@@ -46,7 +50,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
             pubDate: pubDate,
             description: description
         )
-
+        
         let json: [String: Any] = [
             "article_id": id,
             "title": title,
@@ -55,7 +59,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
             "pubDate": pubDate,
             "description": description as Any
         ]
-
+        
         return (model, json)
     }
     
