@@ -159,6 +159,17 @@ final class HomeViewModelTests: XCTestCase {
     }
     
     
+    func test_toggleBookmark_addsItemToReadingList_whenNotBookmarked() async {
+        let (sut, client) = makeSUT()
+        let item = uniqueItem(id: "1")
+        client.stubbedResult = [ item ]
+        
+        await sut.load()
+        await sut.toggleBookmark(at: 0)
+        
+        XCTAssertEqual(sut.readingList.first?.id, item.id)
+    }
+    
     // MARK: - Helpers
     private func makeSUT(
         file: StaticString = #filePath,
